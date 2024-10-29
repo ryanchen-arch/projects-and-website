@@ -28,14 +28,7 @@ public class StatisticCalculator {
     
     public static void main(String[] args) {
         System.out.println("Statistics Calculator");
-        int choice;
-        do {
-            choice = showChoices();
-            actOn(choice);
-        } while (choice != 0);
-        System.out.println("Goodbye!");
-    }
-    public static int showChoices() {
+        
         System.out.println("1. Insert new number");
         System.out.println("2. Remove last number");
         System.out.println("3. Print raw array of numbers");
@@ -46,6 +39,14 @@ public class StatisticCalculator {
         System.out.println("8. Calculate the mean deviation");
         System.out.println("9. Calculate the standard deviation");
         System.out.println("0. Quit");
+        int choice;
+        do {
+            choice = showChoices();
+            actOn(choice);
+        } while (choice != 0);
+        System.out.println("Goodbye!");
+    }
+    public static int showChoices() {
         int choice = (int)askDouble("Enter selection:");
         return choice;
     }
@@ -58,10 +59,10 @@ public class StatisticCalculator {
             case 5: mean(); break;
             case 6: median(); break;
             case 7: maxAndMin(); break;
-            case 8: System.out.println("\n"); break;
+            case 8: mDeviation(); break;
             case 9: sDeviation(); break;
             case 0: break; 
-            default: System.out.println("\n"); showChoices(); break;
+            default: showChoices(); break;
         }
     }
     public static void add() {
@@ -143,6 +144,23 @@ public class StatisticCalculator {
         }
         double sDeviation = Math.round((Math.sqrt(dSum / (size - 1))) * 100) / 100.00;
         System.out.println("Standard deviation: " + sDeviation);
+        System.out.println("\n");
+    }
+    
+    public static void mDeviation() {
+        double sum = 0;
+        for (int k = 0; k < size; k++) {
+            sum += numArray[k];
+        }
+        double mean = sum / size;
+        double dSum = 0;
+        for (int k = 0; k < size; k++) {
+            double difference = Math.abs(numArray[k] - mean);
+            dSum += difference;
+        }
+        double mDeviation = Math.round((dSum / size) * 100) / 100.00;
+        System.out.println("Mean deviation: " + mDeviation);
+        System.out.println("\n");
     }
     
 }
