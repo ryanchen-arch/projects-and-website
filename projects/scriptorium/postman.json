@@ -1,0 +1,1015 @@
+{
+	"info": {
+		"_postman_id": "b3f0462a-7c04-45f7-9166-e8de608f1205",
+		"name": "All Tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "39459405"
+	},
+	"item": [
+		{
+			"name": "signin",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"johnD@example.com\",\n  \"password\": \"securepassword\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/auth/signup"
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Save token\", function () {",
+							"    const jsonData = pm.response.json();",
+							"",
+							"    // Check if the token exists and is not null",
+							"    if (jsonData.token && jsonData.token !== null) {",
+							"        pm.collectionVariables.set(\"jwt_token\", jsonData.token); // Save the token to the collection",
+							"        console.log(\"Token saved to collection:\", jsonData.token); // Log the token for debugging",
+							"    } else {",
+							"        console.log(\"No valid token found in response.\"); // Log if no valid token is found",
+							"    }",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n  \"email\": \"johnD@example.com\",\n  \"password\": \"securepassword\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "create - creating a template",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"Test Template\",\n    \"explanation\": \"This is a test template\",\n    \"code\": \"console.log('Hello World')\",\n    \"tags\": \"test,example\"  // This is correct as your schema expects a string\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/templates/create"
+			},
+			"response": []
+		},
+		{
+			"name": "Edited Last name ",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n\n  \"firstName\": \"John\",\n  \"lastName\": \"EditedDo\"\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/users/edit"
+			},
+			"response": []
+		},
+		{
+			"name": "Edited Photo",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "profilePicture",
+							"type": "file",
+							"src": "/Users/adam/Downloads/4b777597-f7a2-41af-bfff-432aaf7dd5b3.jpeg"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/users/uploadphoto",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"users",
+						"uploadphoto"
+					],
+					"query": [
+						{
+							"key": "profilePicture",
+							"value": null,
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create a blogpost with a templateId",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\n  \"title\": \"My First Post\",\n  \"description\": \"This is a description of my first post.\",\n  \"tags\": [\"javascript\", \"coding\", \"tutorial\"],\n  \"templateId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/posts/post"
+			},
+			"response": []
+		},
+		{
+			"name": "create post for search",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"JavaScript Closures Explained\",\n  \"description\": \"A deep dive into closures in JavaScript and how they help with functional programming.\",\n  \"tags\": [\"JavaScript\", \"closures\", \"functional programming\"],\n  \"templateId\": 1\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/posts/post"
+			},
+			"response": []
+		},
+		{
+			"name": "search for post",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/posts/post?page=1&limit=10&search=javascript",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"posts",
+						"post"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "search",
+							"value": "javascript"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "all blogposts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/posts/post?page=1&limit=10",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"posts",
+						"post"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update a blog post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"Updated Blog Post Title\",\n  \"description\": \"Updated description for the blog post.\",\n  \"tags\": [\"updated\", \"blog\", \"post\"],\n  \"templateIds\": 1\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/posts/1"
+			},
+			"response": []
+		},
+		{
+			"name": "create a top comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"content\": \"This is a sample comment\",\n  \"postId\": 1,\n  \"authorId\": 2,\n  \"parentId\": null\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/comments/create"
+			},
+			"response": []
+		},
+		{
+			"name": "get comments from post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/comments/1"
+			},
+			"response": []
+		},
+		{
+			"name": "submitReport - reporting a commment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"explanation\": \"I don't like it lol\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/reports/submitReport/comment/1"
+			},
+			"response": []
+		},
+		{
+			"name": "submitReport - reporting a blogpost",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"explanation\": \"I want to finisgh this project\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/reports/submitReport/blogpost/1"
+			},
+			"response": []
+		},
+		{
+			"name": "admin/actions - can pass a comment that is appropriate",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/reports/admin/actions/comment/1?action=pass",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"reports",
+						"admin",
+						"actions",
+						"comment",
+						"1"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "pass"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin/actions - can pass a blogpost that is appropriate",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/reports/admin/actions/blogpost/1?action=pass",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"reports",
+						"admin",
+						"actions",
+						"blogpost",
+						"1"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "pass"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin/actions - can flag a blgopost",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/reports/admin/actions/blogpost/1?action=flag",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"reports",
+						"admin",
+						"actions",
+						"blogpost",
+						"1"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "flag"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "admin/actions - can flag a comment",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PATCH",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/reports/admin/actions/comment/1?action=flag",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"reports",
+						"admin",
+						"actions",
+						"comment",
+						"1"
+					],
+					"query": [
+						{
+							"key": "action",
+							"value": "flag"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "blogReports - check all reported blogs ordered by report count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/reports/admin/getReports/blogReports?limit=5&page=2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"reports",
+						"admin",
+						"getReports",
+						"blogReports"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "5"
+						},
+						{
+							"key": "page",
+							"value": "2"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getReport/[id] - able to get a report by its id",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/reports/admin/getReports/1"
+			},
+			"response": []
+		},
+		{
+			"name": "commentReports - check all reported comments order by report count",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/reports/admin/getReports/commentReports"
+			},
+			"response": []
+		},
+		{
+			"name": "getReportsByContent - can retrieve reports from blogposts",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/reports/admin/reportsByContent/blogpost/1"
+			},
+			"response": []
+		},
+		{
+			"name": "getReportsByContent - can retrieve reports from comments",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/reports/admin/reportsByContent/comment/1"
+			},
+			"response": []
+		},
+		{
+			"name": "delete a blog post",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3000/api/posts/1"
+			},
+			"response": []
+		},
+		{
+			"name": "test python",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"language\": \"Python\", \"code\": \"def is_palindrome(s):\\n    return s == s[::-1]\\n\\ndef is_symmetrical(s):\\n    length = len(s)\\n    mid = length // 2\\n    if length % 2 == 0:\\n        return s[:mid] == s[mid:]\\n    else:\\n        return s[:mid] == s[mid+1:]\\n\\nstring = input()\\nif is_symmetrical(string):\\n    print(\\\"The entered string is symmetrical\\\")\\nelse:\\n    print(\\\"The entered string is not symmetrical\\\")\\n\\nif is_palindrome(string):\\n    print(\\\"The entered string is palindrome\\\")\\nelse:\\n    print(\\\"The entered string is not palindrome\\\")\", \"input\": \"amaama\"}"
+				},
+				"url": "http://localhost:3000/api/execute/execute"
+			},
+			"response": []
+		},
+		{
+			"name": "test java",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"language\": \"Java\", \"code\": \"public class Student {\\n    int id;\\n    String name;\\n\\n    public static void main(String args[]) {\\n        Student s1 = new Student();\\n        System.out.println(s1.id);\\n        System.out.println(s1.name);\\n    }\\n}\"}"
+				},
+				"url": "http://localhost:3000/api/execute/execute"
+			},
+			"response": []
+		},
+		{
+			"name": "test C",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"language\": \"C\", \"code\": \"#include <stdio.h>\\nconst int M = 3;\\nconst int N = 3;\\n\\nvoid print(int arr[M][N])\\n{\\n    int i, j;\\n    for (i = 0; i < M; i++)\\n      for (j = 0; j < N; j++)\\n        printf(\\\"%d \\\", arr[i][j]);\\n}\\n\\nint main()\\n{\\n    int arr[][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};\\n    print(arr);\\n    return 0;\\n}\"}"
+				},
+				"url": "http://localhost:3000/api/execute/execute"
+			},
+			"response": []
+		},
+		{
+			"name": "test C++",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"language\": \"C++\", \"code\": \"// C++ program to find minimum (or maximum) element \\n#include <bits/stdc++.h> \\nusing namespace std; \\n\\nint getMin(int arr[], int n) { \\n    return *min_element(arr, arr + n); \\n} \\n\\nint getMax(int arr[], int n) { \\n    return *max_element(arr, arr + n); \\n} \\n\\nint main() { \\n    int arr[] = { 12, 1234, 45, 67, 1 }; \\n    int n = sizeof(arr) / sizeof(arr[0]); \\n    cout << \\\"Minimum element of array: \\\" << getMin(arr, n) << \\\" \\\"; \\n    cout << \\\"Maximum element of array: \\\" << getMax(arr, n); \\n    return 0; \\n}\"}"
+				},
+				"url": "http://localhost:3000/api/execute/execute"
+			},
+			"response": []
+		},
+		{
+			"name": "test javascript",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"language\": \"Javascript\", \"code\": \"function fibonacci(num) {\\n    if(num < 2) {\\n        return num;\\n    }\\n    else {\\n        return fibonacci(num-1) + fibonacci(num - 2);\\n    }\\n}\\n\\nconst nTerms = 10;\\n\\nif(nTerms <= 0) {\\n    console.log('Enter a positive integer.');\\n}\\nelse {\\n    for(let i = 0; i < nTerms; i++) {\\n        console.log(fibonacci(i));\\n    }\\n}\"}"
+				},
+				"url": "http://localhost:3000/api/execute/execute"
+			},
+			"response": []
+		},
+		{
+			"name": "search - searching for all templates",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/templates/search?page=1&limit=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"templates",
+						"search"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search - given search parameter",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/templates/search?search=algorithms&page=1&limit=5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"templates",
+						"search"
+					],
+					"query": [
+						{
+							"key": "search",
+							"value": "algorithms"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "limit",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "userSavedTemplates - all templates made by userId in payload",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/templates/userSavedTemplates"
+			},
+			"response": []
+		},
+		{
+			"name": "blogPosts - finds blog posts that mention tId",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/templates/1/blogPosts"
+			},
+			"response": []
+		},
+		{
+			"name": "fork - making a forked copy of an existing templaet",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/templates/1/fork"
+			},
+			"response": []
+		},
+		{
+			"name": "use - returns the code of specified template",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/templates/1/use"
+			},
+			"response": []
+		},
+		{
+			"name": "getTemplate - retrieves template of specific id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/templates/1/getTemplate"
+			},
+			"response": []
+		},
+		{
+			"name": "templates/[tid]/index - update a template",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"apple\",\n    \"explanation\": \"sauce\",\n    \"code\": \"is\",\n    \"tags\": \"good\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "http://localhost:3000/api/templates/1"
+			},
+			"response": []
+		},
+		{
+			"name": "templates/[tid]/index - deleting a template from db",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": "http://localhost:3000/api/templates/1"
+			},
+			"response": []
+		},
+		{
+			"name": "logout",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{jwt_token}}"
+					}
+				},
+				"method": "GET",
+				"header": [],
+				"url": "http://localhost:3000/api/auth/logout"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

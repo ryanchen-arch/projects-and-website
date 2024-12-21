@@ -1,0 +1,13 @@
+# Use Node.js image as the base
+FROM node:20-alpine
+
+# Set working directory
+# WORKDIR /usr/src/app
+WORKDIR /app
+
+# Install any necessary dependencies
+
+COPY temp.js .
+
+
+CMD ["node", "temp.js"]

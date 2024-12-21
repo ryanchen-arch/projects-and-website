@@ -1,0 +1,14 @@
+# Use Python 3 as the base image
+FROM python:3
+
+# Set the working directory inside the container
+# WORKDIR /usr/src/app
+WORKDIR /app
+# Copy the code into the container
+COPY temp.py .
+
+# Install any dependencies (if necessary)
+# RUN pip install -r requirements.txt
+
+# Run the Python script
+CMD ["python", "temp.py"]

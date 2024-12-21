@@ -1,0 +1,11 @@
+# Use official Rust image
+FROM rust:1.70-alpine
+
+# Set the working directory inside the container
+WORKDIR /usr/src/app
+
+# Copy the Rust code into the container as 'temp.rs'
+COPY temp.rs .
+
+# Command to compile and run the Rust code
+CMD ["sh", "-c", "rustc temp.rs && ./temp"]

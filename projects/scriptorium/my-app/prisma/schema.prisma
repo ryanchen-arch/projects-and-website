@@ -1,0 +1,92 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "darwin"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  templates      Template[]
+  email          String     @unique
+  password       String
+  firstName      String
+  lastName       String
+  profilePicture String? // Optional profile picture
+  phoneNumber    String?
+  role           String     @default("USER")
+  blogPosts      Post[] // Relationship with Post
+  comments       Comment[] // Relationship with Comment
+  // IS THERE A NEED FOR USERS TO TRACK THE REPORTS THEY'VE SUBMITTED? 
+}
+
+model Template {
+  id                 Int     @id @default(autoincrement())
+  title              String
+  explanation        String
+  code               String
+  tags               String // sqlite doesn't support string lists, so instead use comma seperated strings and parse them for the tags
+  userId             Int
+  isFork             Boolean @default(false)
+  originalTemplateId Int? // This would be null in the case that a template is not forked
+  BlogPosts          Post[]
+  // createdAt DateTime @default(now())   // Not sure if necessary but maybe we include when a template was created?
+  User               User    @relation(fields: [userId], references: [id])
+}
+
+// Needs to include the blog posts that mention this template. Perhaps create a relationship 
+// between postid in ppost and here.
+
+model Report {
+  id          Int    @id @default(autoincrement())
+  explanation String // Why you're reporting
+  contentType String // BlogPost or Comment
+  postId      Int?
+  commentId   Int?
+
+  post    Post?    @relation(fields: [postId], references: [id])
+  comment Comment? @relation(fields: [commentId], references: [id])
+}
+
+model Post {
+  id          Int     @id @default(autoincrement())
+  reportCount Int     @default(0)
+  isHidden    Boolean @default(false) // Flag to hide the post
+  templateId  Int? // Foreign key for Template
+
+  reports     Report[] // One-to-many relationship: Post can have multiple reports
+  Template    Template? @relation(fields: [templateId], references: [id]) // Relation with Template
+  rating      Int       @default(0)
+  title       String
+  description String
+  tags        String // sqlite doesn't support string lists, so instead use comma seperated strings and parse them for the tags
+  authorId    Int
+  author      User      @relation(fields: [authorId], references: [id])
+  comments    Comment[]
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  content     String // Content of the comment
+  reportCount Int? // I think this will make it easier to find most reported, but don't think its completely necessary
+  isHidden    Boolean   @default(false) // Flag to hide the comment
+  reports     Report[] // One-to-many relationship: Comment can have multiple reports
+  postId      Int // Foreign key for Post
+  authorId    Int // Foreign key for User
+  parentId    Int? // Optional parent comment for replies
+  post        Post      @relation(fields: [postId], references: [id])
+  author      User      @relation(fields: [authorId], references: [id])
+  // This defines the self-referential relation
+  parent      Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies     Comment[] @relation("CommentReplies") // Relationship for replies
+  rating      Int       @default(0)
+}
